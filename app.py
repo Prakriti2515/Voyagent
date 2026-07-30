@@ -82,6 +82,17 @@ def compare_route():
     result = compare_destinations(destinations, vector_store, GEMINI_API_KEY)
     return jsonify(result)
 
+@app.route("/budget", methods=["POST"])
+def budget_route():
+    data = request.get_json()
+    destination = data.get("destination", "")
+    days = data.get("days", 3)
+    travelers = data.get("travelers", 1)
+    style = data.get("style", "mid-range")
+ 
+    result = estimate_budget(destination, days, travelers, style, GEMINI_API_KEY)
+    return jsonify(result)
+
 
 
 if __name__ == "__main__":
