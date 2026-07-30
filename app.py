@@ -93,6 +93,14 @@ def budget_route():
     result = estimate_budget(destination, days, travelers, style, GEMINI_API_KEY)
     return jsonify(result)
 
+@app.route("/weather", methods=["POST"])
+def weather_route():
+    data = request.get_json()
+    city = data.get("city", "")
+ 
+    result = get_weather(city)
+    return jsonify(result)
+
 
 
 if __name__ == "__main__":
