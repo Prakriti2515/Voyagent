@@ -109,6 +109,17 @@ def attractions_route():
     result = recommend_attractions(destination, GEMINI_API_KEY, vector_store)
     return jsonify(result)
 
+@app.route("/chat", methods=["POST"])
+def chat():
+    data = request.get_json()
+    user_message = data.get("message", "")
+ 
+    if user_message.strip() == "":
+        return jsonify({"message": "Please type something"}), 400
+ 
+    result = process_chat_message(user_message, vector_store, GEMINI_API_KEY)
+    return jsonify(result)
+
 
 
 if __name__ == "__main__":
