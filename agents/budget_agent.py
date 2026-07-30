@@ -1,5 +1,7 @@
 import os
 from google import genai
+from dotenv import load_dotenv
+load_dotenv()
 LLM_MODEL_NAME=os.environ["LLM_MODEL_NAME"]
 
 DAILY_COST_TABLE = {

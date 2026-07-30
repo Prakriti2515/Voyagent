@@ -1,5 +1,7 @@
 import os
 import requests
+from dotenv import load_dotenv
+load_dotenv()
 
 GEOCODE_URL = os.environ["GEOCODE_URL"]
 FORECAST_URL = os.environ["FORECAST_URL"]
@@ -30,7 +32,7 @@ def get_weather(city_name):
     longitude = place["longitude"]
     place_name = place.get("name", city_name)
     country = place.get("country", "")
-    
+
     forecast_response = requests.get(FORECAST_URL, params={
         "latitude": latitude,
         "longitude": longitude,

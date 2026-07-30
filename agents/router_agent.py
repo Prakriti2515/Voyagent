@@ -1,6 +1,8 @@
 import os
 import json
 from google import genai
+from dotenv import load_dotenv
+load_dotenv()
 LLM_MODEL_NAME=os.environ["LLM_MODEL_NAME"]
 
 ROUTER_PROMPT = """You are the router for a travel planning assistant made of multiple agents.

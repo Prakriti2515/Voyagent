@@ -1,6 +1,8 @@
 import os
 from google import genai
 from embeddings import get_query_embedding
+from dotenv import load_dotenv
+load_dotenv()
 
 LLM_MODEL_NAME=os.environ["LLM_MODEL_NAME"]
 
