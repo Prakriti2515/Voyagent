@@ -101,6 +101,14 @@ def weather_route():
     result = get_weather(city)
     return jsonify(result)
 
+@app.route("/attractions", methods=["POST"])
+def attractions_route():
+    data = request.get_json()
+    destination = data.get("destination", "")
+ 
+    result = recommend_attractions(destination, GEMINI_API_KEY, vector_store)
+    return jsonify(result)
+
 
 
 if __name__ == "__main__":
