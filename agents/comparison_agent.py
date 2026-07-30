@@ -1,8 +1,8 @@
-
+import os
 from google import genai
 from embeddings import get_query_embedding
 
-LLM_MODEL_NAME="gemini-2.5-flash"
+LLM_MODEL_NAME=os.environ["LLM_MODEL_NAME"]
 
 def compare_destinations(destination_list, vector_store, api_key):
     context_text = ""

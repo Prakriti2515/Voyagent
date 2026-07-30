@@ -1,5 +1,6 @@
+import os
 from google import genai
-LLM_MODEL_NAME="gemini-2.5-flash"
+LLM_MODEL_NAME=os.environ["LLM_MODEL_NAME"]
 
 DAILY_COST_TABLE = {
     "budget":    {"stay": 20,  "food": 10, "local_transport": 5,  "activities": 10},
