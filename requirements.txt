@@ -1,0 +1,7 @@
+flask
+PyPDF2
+faiss-cpu
+numpy
+google-genai
+requests
+python-dotenv
