@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyagent — AI Travel Planning Crew</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="app-shell">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <span class="brand-mark">✦</span>
+            <div class="brand-text">
+                <span class="brand-title">VOYAGENT</span>
+                <span class="brand-sub">agent-powered trip desk</span>
+            </div>
+        </div>
+
+        <nav class="nav-list">
+            <button class="nav-btn active" data-target="panel-chat">
+                <span class="nav-icon">💬</span> Trip Chat
+            </button>
+            <button class="nav-btn" data-target="panel-itinerary">
+                <span class="nav-icon">🗓️</span> Itinerary
+            </button>
+            <button class="nav-btn" data-target="panel-compare">
+                <span class="nav-icon">⚖️</span> Compare
+            </button>
+            <button class="nav-btn" data-target="panel-budget">
+                <span class="nav-icon">💰</span> Budget
+            </button>
+            <button class="nav-btn" data-target="panel-weather">
+                <span class="nav-icon">☀️</span> Weather
+            </button>
+            <button class="nav-btn" data-target="panel-attractions">
+                <span class="nav-icon">📍</span> Attractions
+            </button>
+            <button class="nav-btn" data-target="panel-documents">
+                <span class="nav-icon">📁</span> Documents
+            </button>
+        </nav>
+
+        <div class="agent-crew">
+            <span class="agent-crew-label">Agent Crew on Duty</span>
+            <ul>
+                <li>Router Agent</li>
+                <li>Itinerary Agent</li>
+                <li>Comparison Agent</li>
+                <li>Budget Agent</li>
+                <li>Weather Agent (tool)</li>
+                <li>Attraction Agent</li>
+                <li>Agentic RAG</li>
+            </ul>
+        </div>
+
+        <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+            <span id="themeIcon">🌙</span> <span id="themeLabel">Dark mode</span>
+        </button>
+    </aside>
+
+    <main class="main-area">
+
+        <section class="panel active" id="panel-chat">
+            <header class="panel-header">
+                <h1>Trip Chat</h1>
+                <p>Ask anything — the Router Agent reads your message and picks the right specialist for the job.</p>
+            </header>
+
+            <div class="chat-log" id="chatLog">
+                <div class="boarding-pass agent-msg">
+                    <div class="bp-stub">
+                        <span class="bp-gate">GATE · GENERAL ASSISTANT</span>
+                    </div>
+                    <div class="bp-body">
+                        Hi, I'm Voyagent. Try something like "Plan a 4 day trip to Jaipur",
+                        "Compare Goa vs Manali", "Weather in Udaipur", or upload a travel guide PDF
+                        and ask a question about it.
+                    </div>
+                </div>
+            </div>
+
+            <form class="chat-input-row" id="chatForm">
+                <input type="text" id="chatInput" placeholder="Ask your travel question..." autocomplete="off">
+                <button type="submit" class="btn-primary">Send</button>
+            </form>
+        </section>
+
+        <section class="panel" id="panel-itinerary">
+            <header class="panel-header">
+                <h1>Itinerary Agent</h1>
+                <p>Generates a day-by-day travel plan, using your uploaded guides when relevant.</p>
+            </header>
+
+            <form class="tool-form" id="itineraryForm">
+                <label>Destination
+                    <input type="text" id="itDestination" placeholder="e.g. Jaipur, India" required>
+                </label>
+                <label>Number of days
+                    <input type="number" id="itDays" value="3" min="1" max="30" required>
+                </label>
+                <label>Interests
+                    <input type="text" id="itInterests" placeholder="e.g. history, food, nightlife">
+                </label>
+                <label>Budget level
+                    <select id="itBudget">
+                        <option value="budget">Budget</option>
+                        <option value="mid-range" selected>Mid-range</option>
+                        <option value="luxury">Luxury</option>
+                    </select>
+                </label>
+                <button type="submit" class="btn-primary">Plan My Trip</button>
+            </form>
+
+            <div class="result-area" id="itineraryResult"></div>
+        </section>
+
+        <section class="panel" id="panel-compare">
+            <header class="panel-header">
+                <h1>Comparison Agent</h1>
+                <p>Compares two or more destinations side by side.</p>
+            </header>
+
+            <form class="tool-form" id="compareForm">
+                <label>Destinations (comma separated)
+                    <input type="text" id="compareDestinations" placeholder="e.g. Goa, Manali, Rishikesh" required>
+                </label>
+                <button type="submit" class="btn-primary">Compare Destinations</button>
+            </form>
+
+            <div class="result-area" id="compareResult"></div>
+        </section>
+
+        <section class="panel" id="panel-budget">
+            <header class="panel-header">
+                <h1>Budget Agent</h1>
+                <p>Estimates trip cost using a real calculation, then explains it in plain language.</p>
+            </header>
+
+            <form class="tool-form" id="budgetForm">
+                <label>Destination
+                    <input type="text" id="budgetDestination" placeholder="e.g. Bali, Indonesia" required>
+                </label>
+                <label>Number of days
+                    <input type="number" id="budgetDays" value="5" min="1" max="60" required>
+                </label>
+                <label>Travelers
+                    <input type="number" id="budgetTravelers" value="2" min="1" max="20" required>
+                </label>
+                <label>Style
+                    <select id="budgetStyle">
+                        <option value="budget">Budget</option>
+                        <option value="mid-range" selected>Mid-range</option>
+                        <option value="luxury">Luxury</option>
+                    </select>
+                </label>
+                <button type="submit" class="btn-primary">Estimate Budget</button>
+            </form>
+
+            <div class="result-area" id="budgetResult"></div>
+        </section>
+
+        <section class="panel" id="panel-weather">
+            <header class="panel-header">
+                <h1>Weather Agent</h1>
+                <p>Calls a live weather API (Open-Meteo) — a real tool-calling example.</p>
+            </header>
+
+            <form class="tool-form" id="weatherForm">
+                <label>City
+                    <input type="text" id="weatherCity" placeholder="e.g. Paris" required>
+                </label>
+                <button type="submit" class="btn-primary">Check Weather</button>
+            </form>
+
+            <div class="result-area" id="weatherResult"></div>
+        </section>
+
+        <section class="panel" id="panel-attractions">
+            <header class="panel-header">
+                <h1>Attraction Agent</h1>
+                <p>Recommends top tourist attractions for a destination.</p>
+            </header>
+
+            <form class="tool-form" id="attractionsForm">
+                <label>Destination
+                    <input type="text" id="attractionsDestination" placeholder="e.g. Rome, Italy" required>
+                </label>
+                <button type="submit" class="btn-primary">Find Attractions</button>
+            </form>
+
+            <div class="result-area" id="attractionsResult"></div>
+        </section>
+
+        <section class="panel" id="panel-documents">
+            <header class="panel-header">
+                <h1>Travel Documents</h1>
+                <p>Upload travel guide PDFs — they get chunked, embedded, and stored so every agent can search them.</p>
+            </header>
+
+            <div class="upload-zone" id="uploadZone">
+                <div class="upload-zone-icon">🧳</div>
+                <p><strong>Drop PDFs here</strong> or click to choose files</p>
+                <input type="file" id="pdfInput" multiple accept=".pdf">
+            </div>
+
+            <button class="btn-primary" id="uploadBtn">Upload & Process</button>
+
+            <div class="result-area" id="uploadResult"></div>
+        </section>
+
+    </main>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
