@@ -74,6 +74,14 @@ def itinerary_route():
     result = create_itinerary(destination, days, interests, budget_level, vector_store, GEMINI_API_KEY)
     return jsonify(result)
 
+@app.route("/compare", methods=["POST"])
+def compare_route():
+    data = request.get_json()
+    destinations = data.get("destinations", [])
+ 
+    result = compare_destinations(destinations, vector_store, GEMINI_API_KEY)
+    return jsonify(result)
+
 
 
 if __name__ == "__main__":
