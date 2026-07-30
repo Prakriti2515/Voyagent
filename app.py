@@ -6,6 +6,13 @@ from pdf_reader import extract_text_from_pdf
 from text_splitter import split_text_into_chunks
 from embeddings import get_embedding
 from vector_store import SimpleVectorStore
+ 
+from orchestrator import process_chat_message
+from agents.itinerary_agent import create_itinerary
+from agents.comparison_agent import compare_destinations
+from agents.budget_agent import estimate_budget
+from agents.attraction_agent import recommend_attractions
+from agents.weather_agent import get_weather
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -56,6 +63,16 @@ def upload_pdf():
         "chunks_added": total_chunks_added
     })
 
+@app.route("/itinerary", methods=["POST"])
+def itinerary_route():
+    data = request.get_json()
+    destination = data.get("destination", "")
+    days = data.get("days", 3)
+    interests = data.get("interests", "general sightseeing")
+    budget_level = data.get("budget_level", "mid-range")
+ 
+    result = create_itinerary(destination, days, interests, budget_level, vector_store, GEMINI_API_KEY)
+    return jsonify(result)
 
 
 
