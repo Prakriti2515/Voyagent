@@ -12,6 +12,8 @@ DAILY_COST_TABLE = {
 
 
 def calculate_budget_numbers(days, travelers, style):
+    days=int(days)
+    travelers=int(travelers)
     style = str(style).lower()
 
     if style not in DAILY_COST_TABLE:
