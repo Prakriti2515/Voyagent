@@ -29,6 +29,33 @@ themeToggle.addEventListener("click", function () {
     }
 });
 
+function escapeHTML(text) {
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+function formatAgentText(rawText) {
+    if (!rawText) {
+        return "";
+    }
+
+    let text = escapeHTML(rawText);
+
+    text = text.replace(/^[ \t]*([-*_])\1{2,}[ \t]*$/gm, "<hr>");
+
+    text = text.replace(/^[ \t]*#{1,6}[ \t]*(.+)$/gm, function (match, headingText) {
+        return '<strong class="agent-heading">' + headingText.trim() + "</strong>";
+    });
+    text = text.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+
+    
+    text = text.replace(/^[ \t]*[-*][ \t]+(.+)$/gm, "• $1");
+
+    return text;
+}
+
 function createSourceTagsHTML(sources) {
     if (!sources || sources.length === 0) {
         return "";
@@ -43,11 +70,12 @@ function createSourceTagsHTML(sources) {
     return tagsHTML;
 }
 
-function showResultCard(containerId, text, sources) {
+function showResultCard(containerId, text, sources, alreadyFormatted) {
     const container = document.getElementById(containerId);
-    let html = '<div class="result-card">' + text + "</div>";
+    const formattedText = alreadyFormatted ? text : formatAgentText(text);
+    let html = '<div class="result-card">' + formattedText + "</div>";
     if (sources && sources.length > 0) {
-        html = '<div class="result-card">' + text + createSourceTagsHTML(sources) + "</div>";
+        html = '<div class="result-card">' + formattedText + createSourceTagsHTML(sources) + "</div>";
     }
     container.innerHTML = html;
 }
@@ -101,7 +129,7 @@ chatForm.addEventListener("submit", function (event) {
         card.className = "agent-card";
 
         let innerHTML = '<span class="agent-tag">' + agentName + '</span>';
-        innerHTML += '<div class="agent-body">' + answer + '</div>';
+        innerHTML += '<div class="agent-body">' + formatAgentText(answer) + '</div>';
         if (sources.length > 0) {
             innerHTML += '<div class="agent-sources">' + sources.map(function (s) {
                 return '<span class="source-tag">📎 ' + s + '</span>';
@@ -212,8 +240,8 @@ document.getElementById("budgetForm").addEventListener("submit", function (event
         tableHTML += "<tr class='total'><td>Total estimate</td><td class='amount'>$" + numbers.grand_total + "</td></tr>";
         tableHTML += "</table>";
 
-        const finalHTML = tableHTML + data.explanation;
-        showResultCard("budgetResult", finalHTML, []);
+        const finalHTML = tableHTML + formatAgentText(data.explanation);
+        showResultCard("budgetResult", finalHTML, [], true);
     })
     .catch(function (error) {
         showStatus("budgetResult", "Something went wrong. Please try again.", true);
