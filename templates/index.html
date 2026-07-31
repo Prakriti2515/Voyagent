@@ -72,11 +72,9 @@
             </header>
 
             <div class="chat-log" id="chatLog">
-                <div class="boarding-pass agent-msg">
-                    <div class="bp-stub">
-                        <span class="bp-gate">GATE · GENERAL ASSISTANT</span>
-                    </div>
-                    <div class="bp-body">
+                <div class="agent-card">
+                    <span class="agent-tag">General Assistant</span>
+                    <div class="agent-body">
                         Hi, I'm Voyagent. Try something like "Plan a 4 day trip to Jaipur",
                         "Compare Goa vs Manali", "Weather in Udaipur", or upload a travel guide PDF
                         and ask a question about it.
@@ -211,6 +209,18 @@
             <button class="btn-primary" id="uploadBtn">Upload & Process</button>
 
             <div class="result-area" id="uploadResult"></div>
+
+            <h2 class="section-subheading">Ask a Question About Your Documents</h2>
+            <p class="section-subtext">This asks the Agentic RAG agent directly and only searches your uploaded PDFs — it always shows which document each answer came from.</p>
+
+            <form class="tool-form" id="documentsAskForm">
+                <label style="grid-column: 1 / -1;">Your question
+                    <input type="text" id="documentsQuestion" placeholder="e.g. What documents do I need for a visa to Japan?" required>
+                </label>
+                <button type="submit" class="btn-primary">Ask</button>
+            </form>
+
+            <div class="result-area" id="documentsAskResult"></div>
         </section>
 
     </main>

@@ -8,6 +8,7 @@ from embeddings import get_embedding
 from vector_store import SimpleVectorStore
  
 from orchestrator import process_chat_message
+from agents.rag_agent import answer_with_sources
 from agents.itinerary_agent import create_itinerary
 from agents.comparison_agent import compare_destinations
 from agents.budget_agent import estimate_budget
@@ -19,7 +20,7 @@ load_dotenv()
 
 GEMINI_API_KEY = os.environ["GEMINI_API_KEY"]
 
-EMBEDDING_DIMENSION = os.environ["EMBEDDING_DIMENSION"]
+EMBEDDING_DIMENSION = int(os.environ["EMBEDDING_DIMENSION"])
 
 app = Flask(__name__)
  
@@ -62,6 +63,17 @@ def upload_pdf():
         "message": "File(s) uploaded and processed successfully!",
         "chunks_added": total_chunks_added
     })
+
+@app.route("/ask_documents", methods=["POST"])
+def ask_documents_route():
+    data = request.get_json()
+    question = data.get("question", "")
+ 
+    if question.strip() == "":
+        return jsonify({"message": "Please type a question"}), 400
+ 
+    result = answer_with_sources(question, vector_store, GEMINI_API_KEY)
+    return jsonify(result)
 
 @app.route("/itinerary", methods=["POST"])
 def itinerary_route():

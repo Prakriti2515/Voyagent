@@ -1,4 +1,3 @@
-
 const navButtons = document.querySelectorAll(".nav-btn");
 const panels = document.querySelectorAll(".panel");
 
@@ -13,7 +12,6 @@ navButtons.forEach(function (btn) {
         document.getElementById(targetId).classList.add("active");
     });
 });
-
 
 const themeToggle = document.getElementById("themeToggle");
 const themeIcon = document.getElementById("themeIcon");
@@ -30,7 +28,6 @@ themeToggle.addEventListener("click", function () {
         themeLabel.textContent = "Dark mode";
     }
 });
-
 
 function createSourceTagsHTML(sources) {
     if (!sources || sources.length === 0) {
@@ -82,8 +79,8 @@ chatForm.addEventListener("submit", function (event) {
     chatLog.scrollTop = chatLog.scrollHeight;
 
     const thinkingCard = document.createElement("div");
-    thinkingCard.className = "boarding-pass agent-msg";
-    thinkingCard.innerHTML = '<div class="bp-stub">GATE · ROUTING</div><div class="bp-body">Deciding which agent should handle this...</div>';
+    thinkingCard.className = "agent-card";
+    thinkingCard.innerHTML = '<span class="agent-tag">Routing</span><div class="agent-body">Deciding which agent should handle this...</div>';
     chatLog.appendChild(thinkingCard);
     chatLog.scrollTop = chatLog.scrollHeight;
 
@@ -101,17 +98,15 @@ chatForm.addEventListener("submit", function (event) {
         const sources = data.sources || [];
 
         const card = document.createElement("div");
-        card.className = "boarding-pass agent-msg";
+        card.className = "agent-card";
 
-        let innerHTML = '<div class="bp-stub">GATE · ' + agentName.toUpperCase() + '</div>';
-        innerHTML += '<div style="flex-grow:1;">';
-        innerHTML += '<div class="bp-body">' + answer + '</div>';
+        let innerHTML = '<span class="agent-tag">' + agentName + '</span>';
+        innerHTML += '<div class="agent-body">' + answer + '</div>';
         if (sources.length > 0) {
-            innerHTML += '<div class="bp-sources">' + sources.map(function (s) {
+            innerHTML += '<div class="agent-sources">' + sources.map(function (s) {
                 return '<span class="source-tag">📎 ' + s + '</span>';
             }).join("") + '</div>';
         }
-        innerHTML += '</div>';
 
         card.innerHTML = innerHTML;
         chatLog.appendChild(card);
@@ -120,13 +115,12 @@ chatForm.addEventListener("submit", function (event) {
     .catch(function (error) {
         thinkingCard.remove();
         const errorCard = document.createElement("div");
-        errorCard.className = "boarding-pass agent-msg";
-        errorCard.innerHTML = '<div class="bp-stub">GATE · ERROR</div><div class="bp-body">Something went wrong. Please try again.</div>';
+        errorCard.className = "agent-card";
+        errorCard.innerHTML = '<span class="agent-tag">Error</span><div class="agent-body">Something went wrong. Please try again.</div>';
         chatLog.appendChild(errorCard);
         console.log(error);
     });
 });
-
 
 document.getElementById("itineraryForm").addEventListener("submit", function (event) {
     event.preventDefault();
@@ -158,7 +152,6 @@ document.getElementById("itineraryForm").addEventListener("submit", function (ev
     });
 });
 
-
 document.getElementById("compareForm").addEventListener("submit", function (event) {
     event.preventDefault();
 
@@ -186,7 +179,6 @@ document.getElementById("compareForm").addEventListener("submit", function (even
         console.log(error);
     });
 });
-
 
 document.getElementById("budgetForm").addEventListener("submit", function (event) {
     event.preventDefault();
@@ -228,7 +220,6 @@ document.getElementById("budgetForm").addEventListener("submit", function (event
         console.log(error);
     });
 });
-
 
 const weatherIconMap = {
     "Clear sky": "☀️", "Mainly clear": "🌤️", "Partly cloudy": "⛅", "Overcast": "☁️",
@@ -277,7 +268,6 @@ document.getElementById("weatherForm").addEventListener("submit", function (even
     });
 });
 
-
 document.getElementById("attractionsForm").addEventListener("submit", function (event) {
     event.preventDefault();
 
@@ -299,7 +289,6 @@ document.getElementById("attractionsForm").addEventListener("submit", function (
         console.log(error);
     });
 });
-
 
 const uploadZone = document.getElementById("uploadZone");
 const pdfInput = document.getElementById("pdfInput");
@@ -335,6 +324,33 @@ uploadBtn.addEventListener("click", function () {
     .catch(function (error) {
         uploadBtn.disabled = false;
         showStatus("uploadResult", "Something went wrong while uploading.", true);
+        console.log(error);
+    });
+});
+
+document.getElementById("documentsAskForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const questionInput = document.getElementById("documentsQuestion");
+    const question = questionInput.value.trim();
+
+    if (question === "") {
+        return;
+    }
+
+    showStatus("documentsAskResult", "Searching your documents...", false);
+
+    fetch("/ask_documents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: question })
+    })
+    .then(function (response) { return response.json(); })
+    .then(function (data) {
+        showResultCard("documentsAskResult", data.answer, data.sources);
+    })
+    .catch(function (error) {
+        showStatus("documentsAskResult", "Something went wrong. Please try again.", true);
         console.log(error);
     });
 });
