@@ -372,6 +372,22 @@ body {
     box-shadow: 0 2px 10px var(--shadow);
 }
 
+.agent-heading {
+    display: block;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.5px;
+    font-size: 19px;
+    color: var(--ink);
+    margin: 16px 0 6px 0;
+}
+ 
+.result-card hr,
+.agent-body hr {
+    border: none;
+    border-top: 1px dashed var(--border);
+    margin: 16px 0;
+}
+
 .source-tags {
     display: flex;
     flex-wrap: wrap;
@@ -442,7 +458,7 @@ body {
     flex-direction: column;
     gap: 16px;
     margin-bottom: 18px;
-    
+
     flex: 1;
     min-height: 0;
     overflow-y: auto;
